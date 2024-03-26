@@ -1,3 +1,4 @@
+// Package iptrie provides an IP/network tree (trie) implementation for fast IP address lookups.
 package iptrie
 
 import (
@@ -60,14 +61,13 @@ func (pt *Trie) FindLargest(ip netip.Addr) any {
 }
 
 // Contains indicates whether the trie contains the given ip.
-//
-// This is just a shorthand for `FindLargest() != nil`.
 func (pt *Trie) Contains(ip netip.Addr) bool {
 	ip = normalizeAddr(ip)
 	return pt.findLargest(ip) != nil
 }
 
-// ContainingNetworks returns the list of networks containing the given ip in ascending prefix order.
+// ContainingNetworks returns the list of networks containing the given ip in ascending prefix order (largest network to
+// smallest).
 //
 // Note: Inserted addresses are normalized to IPv6, so the returned list will be IPv6 only.
 func (pt *Trie) ContainingNetworks(ip netip.Addr) []netip.Prefix {
@@ -81,10 +81,6 @@ func (pt *Trie) ContainingNetworks(ip netip.Addr) []netip.Prefix {
 func (pt *Trie) CoveredNetworks(network netip.Prefix) []netip.Prefix {
 	network = normalizePrefix(network)
 	return pt.coveredNetworks(network)
-}
-
-func (pt *Trie) Network() netip.Prefix {
-	return pt.network
 }
 
 // String returns string representation of trie.
